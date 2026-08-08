@@ -180,52 +180,6 @@ Arbitrum| EVM| USDT
 
 ---
 
-📂 Project Structure
-
-.
-├── index.html          # Main application
-├── README.md           # Documentation
-└── assets/             # Optional images/icons
-
-If the project is expanded, a recommended structure is:
-
-.
-├── index.html
-├── css/
-│   └── style.css
-├── js/
-│   ├── wallet.js
-│   ├── networks.js
-│   └── transfer.js
-├── assets/
-│   └── icons/
-└── README.md
-
----
-
-🖼️ Network Icons
-
-Network icons can be configured independently for each supported network.
-
-Recommended approach:
-
-icon: "./assets/icons/bnb.png"
-
-Using locally hosted assets is preferable for production deployments because it avoids dependency on third-party image hosts.
-
----
-
-🧱 Technology Stack
-
-Technology| Purpose
-HTML5| Application structure
-CSS3| Interface styling
-JavaScript| Application logic
-ethers.js| EVM/Web3 interaction
-EIP-1193| Wallet provider interface
-
----
-
 🔐 Best Practices
 
 Before deploying the application publicly:
@@ -242,37 +196,7 @@ Before deploying the application publicly:
 - Test on testnets before using real funds.
 - Keep dependencies updated.
 
----
 
-📸 Screenshots
-
-Add screenshots of the application here:
-
-docs/
-└── screenshots/
-    ├── desktop.png
-    ├── mobile.png
-    └── wallet-confirmation.png
-
-Example:
-
-![Desktop Interface](docs/screenshots/desktop.png)
-
----
-
-🧪 Development
-
-Run the project locally:
-
-python3 -m http.server 8080
-
-Then visit:
-
-http://localhost:8080
-
-For production deployment, the project can be hosted using any static hosting provider that supports HTTPS.
-
----
 
 🤝 Contributing
 
